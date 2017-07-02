@@ -5,16 +5,28 @@
 
 
 fis.set('project.fileType.text', 'atom');
-fis.set('project.files', ['**.tpl', 'mod.js', '!debug.tpl', '!templates_c', '!output']);
+fis.set('project.files', ['/src/**/*.php', 'mod.js', 'map.json', '!output', '!scripts/**/*.php']);
 
 fis.hook('commonjs', {
     extList: ['.js', '.atom']
 });
 
 // src 为项目目录
-fis.match('/{node_modules, src}/**.js', {
+fis.match('/{node_modules, src}/**.{js,php}', {
     isMod: true,
     useSameNameRequire: true
+});
+
+// 页面
+fis.match('/src/**.php', {
+    isMod: true,
+    isHtmlLike: true,
+    useSameNameRequire: true
+});
+
+// fis map.json
+fis.match('map.json', {
+    release: 'config/map.json'
 });
 
 fis.match('(**)/(*).atom', {
@@ -36,7 +48,7 @@ fis.match('::package', {
         useInlineMap: true,
         resourceType: 'mod',
         processor: {
-            '.tpl': 'tpl'
+            '.php': 'php'
         }
     })
 });
