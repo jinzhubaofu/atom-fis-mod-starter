@@ -1,0 +1,32 @@
+<template>
+    <div>
+        <h4>hello, I'm the list</h4>
+        <todo-item a-for="item in list" :name="item.name" :like="item.like"/>
+    </div>
+</template>
+
+<script type="config">
+{
+    props: ['list'],
+    greeting: 'hello',
+    components: {
+        'todo-item': './Item.atom'
+    }
+}
+</script>
+
+<style scoped>
+h4 {
+    color: green;
+}
+</style>
+
+<script>
+module.exports = {
+    methods: {
+        hello: function (item) {
+            alert(`hello, ${item}`);
+        }
+    }
+};
+</script>

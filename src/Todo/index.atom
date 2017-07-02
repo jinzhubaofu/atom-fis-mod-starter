@@ -1,0 +1,44 @@
+<template>
+    <div>
+        <app-layout>
+            <div slot="main">
+                <h4 @click="hello" class="title">hello, {{name}}；我是 index.atom。</h4>
+                <todo-list :list="list" />
+            </div>
+            <div slot="aside">
+                这里是侧边栏
+            </div>
+        </app-layout>
+    </div>
+</template>
+
+<script type="config">
+{
+    props: ['list', 'name'],
+    components: {
+        'todo-list': './List.atom',
+        'app-layout': '../common/component/Layout.atom'
+    }
+}
+</script>
+
+<style scoped>
+.title {
+    color: cadetblue;
+}
+.title:before {
+    content: '标题：';
+    color: #666;
+}
+</style>
+
+<script>
+import TodoList from './List.atom';
+import Layout from '../common/component/Layout.atom';
+module.exports = {
+    methods: {
+        hello: function () {
+        }
+    }
+};
+</script>
