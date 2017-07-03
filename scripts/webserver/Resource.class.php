@@ -23,6 +23,7 @@ class FISResource {
     //内嵌styles
     public static $styleArray = array();
 
+
     public static $config = array();
 
     public static function reset(){
@@ -104,7 +105,6 @@ class FISResource {
         } else {
             $strNamespace = substr($strName, 0, $intPos);
         }
-        var_dump(self::$arrMap);
         if(isset(self::$arrMap[$strNamespace]) || self::register($strNamespace)) {
             $arrMap = &self::$arrMap[$strNamespace];
             if (isset($arrMap['res'][$strName])) {
@@ -176,7 +176,7 @@ class FISResource {
 
 
 
-    public static function addScriptPool($str, $priority = 0) {
+    public static function addScriptPool($str, $priority) {
         $priority = intval($priority);
         if (!isset(self::$arrScriptPool[$priority])) {
             self::$arrScriptPool[$priority] = array();
@@ -246,7 +246,7 @@ class FISResource {
         } else {
             $strMapName = $strNamespace . '-map.json';
         }
-        $arrConfigDir = self::$config['config_dir']; //配置目录
+        $arrConfigDir = self::$config['config_dir'];//配置目录
         $strPath = preg_replace('/[\\/\\\\]+/', '/', $arrConfigDir . '/' . $strMapName);
         if(is_file($strPath)){
             self::$arrMap[$strNamespace] = json_decode(file_get_contents($strPath), true);

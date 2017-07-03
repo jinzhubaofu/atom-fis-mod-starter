@@ -12,13 +12,13 @@ fis.hook('commonjs', {
 });
 
 // src 为项目目录
-fis.match('/{node_modules, src}/**.{js,php}', {
+fis.match('/{node_modules, src}/**/*.js', {
     isMod: true,
     useSameNameRequire: true
 });
 
 // 页面
-fis.match('/src/**.php', {
+fis.match('/src/**/*.php', {
     isMod: true,
     isHtmlLike: true,
     useSameNameRequire: true
@@ -46,10 +46,7 @@ fis.match('(**)/(*).atom', {
 fis.match('::package', {
     postpackager: fis.plugin('loader', {
         useInlineMap: true,
-        resourceType: 'mod',
-        processor: {
-            '.php': 'php'
-        }
+        resourceType: 'mod'
     })
 });
 

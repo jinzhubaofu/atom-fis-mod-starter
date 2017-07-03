@@ -8,6 +8,7 @@
 date_default_timezone_set("UTC");
 
 require_once(__DIR__.'/atom.php');
+require_once(__DIR__.'/Resource.class.php');
 
 $root = getcwd();
 
@@ -33,9 +34,16 @@ if (!file_exists($absoluteComponentPath)) {
 }
 
 $tplData = getMockData($componentPath);
-
 $atom = renderAtom($absoluteComponentPath, $tplData);
-
 $feRoot = 'http://' . $_SERVER['HTTP_HOST'];
 
-include($absoluteTemplatePath);
+FISResource::setConfig(array(
+    'config_dir'    => $root . '/output/config/',
+    'template_dir'  => $root . '/output/'
+));
+
+display($templatePath, array(
+    'atom' => $atom,
+    'tplData' => $tplData,
+    'feRoot' => $feRoot,
+));
