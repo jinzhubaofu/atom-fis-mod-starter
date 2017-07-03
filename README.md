@@ -18,8 +18,10 @@
 
 ### 启动开发
 
+```sh
 npm run watch
 open http://localhost:9000/src/Todo/index.php
+```
 
 ### 构建
 
