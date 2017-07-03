@@ -5,7 +5,7 @@
 
 
 fis.set('project.fileType.text', 'atom');
-fis.set('project.files', ['/src/**/*.php', 'mod.js', 'map.json', '!output', '!scripts/**/*.php']);
+fis.set('project.files', ['/src/**/*.php', 'mod.js', 'map.json']);
 
 fis.hook('commonjs', {
     extList: ['.js', '.atom']
@@ -22,11 +22,6 @@ fis.match('/src/**/*.php', {
     isMod: true,
     isHtmlLike: true,
     useSameNameRequire: true
-});
-
-// fis map.json
-fis.match('map.json', {
-    release: 'config/map.json'
 });
 
 fis.match('(**)/(*).atom', {
@@ -55,10 +50,44 @@ fis.match('/static/**.js', {
     isMod: false
 });
 
-// 禁用components
+// 禁用 components
 fis.unhook('components');
 fis.hook('node_modules', {
     shimProcess: false,
     shimGlobal: false,
     shimBuffer: false
 });
+
+// 不需要处理的目录
+fis.match('{output,scripts}/**', {
+    release: false
+});
+
+// 生产环境构建
+fis
+    .media('prod')
+    // 压缩 js
+    .match('*.js', {
+        optimizer: fis.plugin('uglify-js')
+    })
+    // 压缩 css
+    .match('*.css', {
+        optimizer: fis.plugin('clean-css')
+    })
+    // 加上 hash
+    .match('*.{js,css,png,jpeg,jpg,gif,ttf,woff,woff2,svg}', {
+        useHash: true
+    })
+    // 如果你需要在线上后把引用路径换成 cdn 地址，那么你可加上这一段
+    // .match('*.js', {
+    //     domain: 'http://your-cdn.baidu.com/your-cdn-prefix'
+    // })
+    .match('::package', {
+        postpackager: fis.plugin('loader', {
+            allInOne: {
+                includeAsyncs: true,
+                css: '${filepath}.bundle.css',
+                js: '${filepath}.bunddle.js'
+            }
+        })
+    });

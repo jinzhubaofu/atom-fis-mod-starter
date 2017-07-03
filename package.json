@@ -4,7 +4,7 @@
   "description": "使用 atom 和 fis3 来创建网站应用的种子项目",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf output && fis3 release -d output -f fis-conf.js -c prod",
+    "build": "fis3 release prod -f fis-conf.js -d output",
     "build:dev": "rimraf output && fis3 release -d output -f fis-conf.js -c",
     "watch": "fis3 release -d output -f fis-conf.js -c -w",
     "start": "php -t output -S 0.0.0.0:9000 scripts/webserver/index.php"

@@ -1,16 +1,18 @@
 <template>
     <div>
         <h4>hello, I'm the list</h4>
-        <todo-item a-for="item in list" :name="item.name" :like="item.like"/>
+        <div a-for="item in list">
+            {{item.name}}
+            like: {{item.like}}
+            <button @click="addLike(item.name)">点我+1</button>
+        </div>
     </div>
 </template>
 
 <script type="config">
 {
     props: ['list'],
-    greeting: 'hello',
     components: {
-        'todo-item': './Item.atom'
     }
 }
 </script>
@@ -24,8 +26,8 @@ h4 {
 <script>
 module.exports = {
     methods: {
-        hello: function (item) {
-            alert(`hello, ${item}`);
+        addLike(itemName) {
+            this.$emit('addLike', itemName);
         }
     }
 };

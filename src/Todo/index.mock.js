@@ -4,11 +4,10 @@
  */
 
 module.exports = {
-    title: '你好，我是一个测试页面',
-    heiheihei: [1, 2, 3],
+    title: 'hello atom!',
     name: '你好世界',
     list: [
-        {name: 'aaaa', like: 100},
-        {name: 'bbbb', like: 200}
+        {name: 'vue', like: 100},
+        {name: 'atom', like: 200}
     ]
 };
