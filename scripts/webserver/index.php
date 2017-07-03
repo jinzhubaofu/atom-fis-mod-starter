@@ -8,7 +8,7 @@
 date_default_timezone_set("UTC");
 
 require_once(__DIR__.'/atom.php');
-require_once(__DIR__.'/Resource.class.php');
+require_once(__DIR__.'/Resource.class.php');
 
 $root = getcwd();
 
