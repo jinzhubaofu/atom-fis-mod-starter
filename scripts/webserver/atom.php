@@ -14,15 +14,13 @@ function renderAtom($componentPath, $data) {
     $vnode->setAttribute('atom-root');
 
     // 渲染结果
-    $output = $atom->renderHtml($componentPath);
-
-    return $output;
+    return $atom->renderHtml($componentPath);
 
 }
 
-function getMockData($componentPath) {
+function getMockData($componentPath, $request) {
     $root = getcwd();
-    $data = exec("node $root/scripts/webserver/get-mock-data.js $root/$componentPath");
+    $data = exec("node $root/scripts/webserver/get-mock-data.js $root/$componentPath $request");
     $data = json_decode($data, true);
     return $data;
 }

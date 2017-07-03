@@ -11,6 +11,7 @@ const path = require('path');
 const fs = require('fs');
 
 let componentPath = path.normalize(process.argv[2]);
+let request = process.argv[3];
 let mockFilePath = path.join(
     path.dirname(componentPath),
     `${path.basename(componentPath, '.atom.php')}.mock.js`
@@ -21,10 +22,30 @@ if (!fs.existsSync(mockFilePath)) {
     return;
 }
 
+let mock;
+
 try {
-    console.log(JSON.stringify(require(mockFilePath)));
+    mock = require(mockFilePath);
 }
 catch (e) {
     console.error(e);
-    process.exit(1);
+    return;
 }
+
+if (typeof mock !== 'function') {
+    console.log(JSON.stringify(mock || {}));
+    return;
+}
+
+mock = mock(request);
+
+if (typeof mock.then !== 'function') {
+    console.log(JSON.stringify(mock || {}));
+    return;
+}
+
+mock.then(data => {
+    console.log(JSON.stringify(data || {}));
+}, error => {
+    console.log(JSON.stringify({}));
+});

@@ -12,11 +12,11 @@ require_once(__DIR__.'/atom.php');
 $root = getcwd();
 
 // 如果不是 *.php 那么直接返回；
-if (!preg_match('/\.php$/', $_SERVER['REQUEST_URI'])) {
+if (!preg_match('/\.php($|\?)/', $_SERVER['REQUEST_URI'])) {
     return false;
 }
 
-$templatePath = substr($_SERVER['REQUEST_URI'], 1);
+$templatePath = substr(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 1);
 $absoluteTemplatePath = "$root/output/$templatePath";
 
 if (!file_exists($absoluteTemplatePath)) {
@@ -32,8 +32,9 @@ if (!file_exists($absoluteComponentPath)) {
     exit(1);
 }
 
-$tplData = getMockData($componentPath);
+$mockData = getMockData($componentPath, $_SERVER['REQUEST_URI']);
+$tplData = $mockData['tplData'];
+$extData = $mockData['extData'];
 $atom = renderAtom($absoluteComponentPath, $tplData);
-$feRoot = 'http://' . $_SERVER['HTTP_HOST'];
 
 include($absoluteTemplatePath);
