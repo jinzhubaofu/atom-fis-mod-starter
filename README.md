@@ -157,6 +157,7 @@ npm run build
         <aside>
             <slot name="aside" />
         </aside>
+    </main>
 </template>
 ```
 
