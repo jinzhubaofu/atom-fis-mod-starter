@@ -16,10 +16,9 @@
 
 ## 开发
 
-npm start
+npm run watch
+open http://localhost:9000/src/Todo/index.php
 
 ## 构建
 
 npm run build
-
-

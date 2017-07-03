@@ -8,6 +8,7 @@
 </head>
 <body>
 <?php echo $atom['html']?>
+<script src="/static/mod.js"></script>
 <script>
 require(['vip-server-renderer/js/atom', 'src/Todo/index.atom'], function (Atom, App) {
     new Atom({
@@ -32,8 +33,5 @@ require(['vip-server-renderer/js/atom', 'src/Todo/index.atom'], function (Atom, 
     });
 });
 </script>
-<?php framework('static/mod.js'); ?>
-<!-- NOTE: 非常重要，不写就 framework 函数就会无效 -->
-<?php placeholder('js'); ?>
 </body>
 </html>
