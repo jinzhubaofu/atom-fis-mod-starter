@@ -6,6 +6,7 @@
         <aside>
             <slot name="aside" />
         </aside>
+    </main>
 </template>
 <style>
 main {

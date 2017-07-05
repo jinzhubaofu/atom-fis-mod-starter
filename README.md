@@ -160,6 +160,7 @@ npm run watch
         <aside>
             <slot name="aside" />
         </aside>
+    </main>
 </template>
 ```
 
