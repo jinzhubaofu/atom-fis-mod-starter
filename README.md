@@ -16,16 +16,24 @@
 3. cd atom-fis3-starter
 4. npm install
 
-### 启动开发
+### 构建
+
+```
+npm run build
+```
+
+### 启动本地开发服务器
 
 ```sh
-npm run watch
+npm start
 open http://localhost:9000/src/Todo/index.php
 ```
 
-### 构建
+### 修改后自动构建
 
-npm run build
+```sh
+npm run watch
+```
 
 ## 开发指南
 
@@ -33,28 +41,28 @@ npm run build
 
 ```text
 ├── README.md
-├── docs                       // 所有的文档应该放到这里
+├── docs                           // 所有的文档应该放到这里
 │   └── ide.md
-├── fis-conf.js                // fis3 构建的配置文件
+├── fis-conf.js                    // fis3 构建的配置文件
 ├── package.json               
-├── scripts                    // 所有的本地脚本在这个目录
-│   ├── build.sh               // 构建用的 shell
-│   └── webserver              // 本地开发用的服务器在这里
-│       ├── atom.php           // 渲染 atom php 文件用的脚本
-│       ├── get-mock-data.js   // 用于生成 mock 数据
-│       └── index.php          // 本地开发服务器的入口 php 文件
-├── src                        // 所有的源码在这里
-│   ├── Todo                   // 建议每个页面都用一个目录来承载
-│   │   ├── index.php          // 入口模板[关键]
-│   │   ├── index.atom         // 入口 atom 组件[关键]
-│   │   ├── index.mock.js      // mock 数据文件
+├── scripts                        // 所有的本地脚本在这个目录
+│   ├── build.sh                   // 构建用的 shell
+│   └── webserver                  // 本地开发用的服务器在这里
+│       ├── AtomWrapper.class.php  // 渲染 atom php 文件用的脚本
+│       ├── get-mock-data.js       // 用于生成 mock 数据
+│       └── index.php              // 本地开发服务器的入口 php 文件
+├── src                            // 所有的源码在这里
+│   ├── Todo                       // 建议每个页面都用一个目录来承载
+│   │   ├── index.php              // 入口模板[关键]
+│   │   ├── index.atom             // 入口 atom 组件[关键]
+│   │   ├── index.mock.js          // mock 数据文件
 │   │   └── List.atom          
-│   └── common                 // 在多个页面中公共使用的模块
-│       └── component          // 公共组件
-│           └── Layout.atom    // 布局组件
-└── static                     // 不需要进行模块化处理的 js
-    └── mod.js                 // 一般我们都使用 npm 包的方式来引入开源库，不需要在这里添加；
-                               // 由于 mod.js 是我们的加载器，所以就在这里特殊处理。
+│   └── common                     // 在多个页面中公共使用的模块
+│       └── component              // 公共组件
+│           └── Layout.atom        // 布局组件
+└── static                         // 不需要进行模块化处理的 js
+    └── mod.js                     // 一般我们都使用 npm 包的方式来引入开源库，不需要在这里添加；
+                                   // 由于 mod.js 是我们的加载器，所以就在这里特殊处理。
 ```
 
 
@@ -62,7 +70,7 @@ npm run build
 
 1. atom 提供了 `Server Side Renderer` 功能，我们在后端需要使用我们提供的入口模板
 1. 我们移除了对 `smarty` 模板的依赖，现在只使用纯 php 来做渲染模板。
-1. 我们给后端提供的是`即食`模板，即在准备好必需的数据后，直接 `include` 指定的入口 php 即可。
+1. 我们给后端提供了模板渲染的封装，方便集成。
 
 #### 步骤
 
@@ -74,63 +82,58 @@ npm run build
     require_once(__DIR__ . "/path/to/vip-server-renderer/php/server/Atom.class.php");
     ```
 
-1. 准备业务数据
+1. 使用 AtomWraper.class.php
 
-    建议所有业务数据都封装进 `tplData`，所有的统计相关数据封装进 `extData`；
+    我们做了一个简易封装，使得 Atom 的模板管理更简单、更明确。
 
-1. 根据请求，路由到正确的 atom 组件和入口模板
+    你可以在[这里](https://github.com/jinzhubaofu/atom-fis-starter/blob/master/scripts/webserver/AtomWrapper.class.php)找到 AtomWrapper 的源码。
 
-    我们提供的 atom 组件一般是**页面目录**下`index.atom.php`，模板是**页面目录**下的 `index.php`；
+    > 请下载此源码，并在合适的位置引入
 
-1. 渲染 atom 组件
-
-    调用下边这个函数即可
+    AtomWrapper 的用法与 Smarty 非常相似，这里举个例子：
 
     ```php
-    function renderAtom($componentPath, $tplData) {
 
-        // 新建实例
-        $atom = new Atom();
+    // 创建实例
+    $atomWrapper = new AtomWrapper();
 
-        // 渲染 vnode
-        $vnode = $atom->renderVNode($componentPath, $tplData);
+    // 设置模板目录
+    // 我们会在模板目录下边查找模板文件和atom组件
+    $atomWrapper->setTemplateDir('/模板目录的绝对路径');
 
-        // 为支持前端渲染，增加data-server-rendered属性
-        $vnode->setAttribute('data-server-rendered', 'true');
+    // 此处添加模板渲染所需要的数据，可以重复调用多次
+    $atomWrapper->assign('title', 'hello atom!');
+    $atomWrapper->assign(
+        'list',
+        array(
+            array(
+                'name' => 'vue',
+                'like' => 100,
+            ),
+            array(
+                'name' => 'atom',
+                'like' => 101
+            ),
+        )
+    );
 
-        // 添加根结点标识
-        $vnode->setAttribute('atom-root');
-
-        // 渲染结果
-        return $atom->renderHtml($componentPath);
-
-    }
+    // 渲染模板和组件
+    $atomWrapper->display(
+        // 指定入口模板（相对路径，相对于模板目录）
+        'relative/to/template/dir/my.php',
+        // 指定atom组件（相对路径，相对于模板目录）
+        'relative/to/template/dir/my.atom.php'
+    );
     ```
 
-1. 渲染模板
+此处，可以根据请求，路由到正确的 atom 组件和入口模板。我们建议的目录结构是：
 
-    除了 atom 组件提供的主要页面内容之外，我们还需要在外层包裹一些基础的 html，诸如 title / link / script 等等；
+    1. 每个页面一个目录
+    2. 每个页面的入口`模板`是页面目录下的`index.php`
+    3. 每个页面的入口`atom组件`是**页面目录**下`index.php`；
 
-    在我们的构建产物中每个页面目录下的 `index.php` 就是这个页面的模板。在准备好数据之后，直接引入它即可。
 
-    必需的数据:
-
-        |名称|类型|必须|描述|
-        |---|---|---|---|
-        |tplData|object|必须|所有页面中的业务数据|
-        |extData|object|非必须|需要用到的统计相关数据|
-        |atom|object|必须|atom预渲染的结果数据|
-        |atom.html|string|必须|atom预渲染输出的html|
-        |atom.css|string|非必须|atom预渲染输出的css|
-
-    使用示例：
-
-    ```php
-    $tplData = getMockData($componentPath);
-    $atom = renderAtom($absoluteComponentPath, $tplData);
-    include($absoluteTemplatePath);
-    ```
-
+> 我们提供了一个简单的本地开发服务器，使用了 AtomWrapper，可供[参考](https://github.com/jinzhubaofu/atom-fis-starter/blob/master/scripts/webserver/index.php)
 
 ### atom 的根结点
 
@@ -180,7 +183,9 @@ npm run build
 
 ### mock 数据
 
-你可以在页面目录下放置一个 `index.mock.js` 文件来生成 mock 数据。
+在此repo中，可以通过 `npm start` 开启一个本地的开发服务器。
+
+此时，你可以在页面目录下放置一个 `index.mock.js` 文件来生成 mock 数据。
 
 在这个 js 文件中，你可以直接返回数据：
 
