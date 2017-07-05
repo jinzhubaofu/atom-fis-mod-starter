@@ -128,9 +128,9 @@ npm run watch
 
 此处，可以根据请求，路由到正确的 atom 组件和入口模板。我们建议的目录结构是：
 
-    1. 每个页面一个目录
-    2. 每个页面的入口`模板`是页面目录下的`index.php`
-    3. 每个页面的入口`atom组件`是**页面目录**下`index.php`；
+1. 每个页面一个目录
+2. 每个页面的`入口模板`是页面目录下的`index.php`
+3. 每个页面的`入口atom组件`是**页面目录**下`index.atom.php`；
 
 
 > 我们提供了一个简单的本地开发服务器，使用了 AtomWrapper，可供[参考](https://github.com/jinzhubaofu/atom-fis-starter/blob/master/scripts/webserver/index.php)
@@ -139,7 +139,7 @@ npm run watch
 
 我们使用固定的 HTML 属性 `[atom-root]` 来标识 atom 的组件的根挂载元素。
 
-这个是在 `scripts/webserver/atom.php` 和 `src/Todo/index.php` 中两处配合起来完成的。
+这个是在 `scripts/webserver/AtomWrapper.class.php` 和 `src/Todo/index.php` 中两处配合起来完成的。
 
 **不建议在一个页面中使用多个 atom 根结点**
 
